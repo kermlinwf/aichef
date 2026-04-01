@@ -52,7 +52,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+    <div className="min-h-screen min-h-dvh bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 -left-20 w-64 h-64 bg-orange-200 rounded-full opacity-20 blur-3xl animate-float" />
         <div
@@ -65,58 +65,62 @@ export default function App() {
         />
       </div>
 
-      <header className="relative glass border-b border-white/20 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4 animate-fadeInUp">
-              <div className="relative">
-                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center text-3xl shadow-xl transform hover:scale-110 transition-transform">
+      <header className="relative glass border-b border-white/20 shadow-lg pt-[env(safe-area-inset-top,0)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-4 animate-fadeInUp min-w-0">
+              <div className="relative shrink-0">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-xl transform hover:scale-110 transition-transform">
                   👨‍🍳
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white" />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white" />
               </div>
-              <div>
-                <h1 className="brand text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+              <div className="min-w-0">
+                <h1 className="brand text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent leading-tight">
                   AI Chef
                 </h1>
-                <p className="text-sm text-gray-600 italic">
+                <p className="text-xs sm:text-sm text-gray-600 italic mt-0.5">
                   Your culinary companion
                 </p>
               </div>
             </div>
             <div
-              className="flex items-center gap-3 animate-fadeInUp"
+              className="flex items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto animate-fadeInUp"
               style={{ animationDelay: '0.1s' }}
             >
               <button
                 type="button"
                 onClick={() => setView('generator')}
-                className={`nav-btn px-6 py-3 rounded-xl font-semibold transition-all ${
+                className={`nav-btn flex-1 sm:flex-none min-h-[48px] px-4 sm:px-6 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all ${
                   view === 'generator'
                     ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg'
                     : 'bg-white/50 text-gray-700 hover:bg-white/80'
                 }`}
               >
-                <span className="flex items-center gap-2">
-                  <span className="text-xl">✨</span>
+                <span className="flex items-center justify-center gap-2">
+                  <span className="text-lg sm:text-xl" aria-hidden>
+                    ✨
+                  </span>
                   Create
                 </span>
               </button>
               <button
                 type="button"
                 onClick={() => setView('list')}
-                className={`nav-btn px-6 py-3 rounded-xl font-semibold transition-all relative ${
+                className={`nav-btn flex-1 sm:flex-none min-h-[48px] px-4 sm:px-6 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all relative ${
                   view === 'list' || view === 'detail'
                     ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg'
                     : 'bg-white/50 text-gray-700 hover:bg-white/80'
                 }`}
               >
-                <span className="flex items-center gap-2">
-                  <span className="text-xl">📚</span>
+                <span className="flex items-center justify-center gap-2">
+                  <span className="text-lg sm:text-xl" aria-hidden>
+                    📚
+                  </span>
                   Recipes
                 </span>
                 {recipes.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-gradient-to-br from-green-400 to-emerald-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+                  <span className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 bg-gradient-to-br from-green-400 to-emerald-500 text-white text-xs font-bold rounded-full min-w-[1.5rem] h-6 px-1 flex items-center justify-center shadow-lg">
                     {recipes.length}
                   </span>
                 )}
@@ -126,7 +130,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-12 pb-10 sm:pb-12">
         {view === 'generator' && (
           <RecipeGenerator
             onRecipeGenerated={addRecipe}

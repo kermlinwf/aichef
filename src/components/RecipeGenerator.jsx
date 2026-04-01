@@ -186,23 +186,23 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
   }
 
   return (
-    <div className="max-w-3xl mx-auto animate-fadeInUp">
-      <div className="glass rounded-3xl shadow-2xl p-8 md:p-12">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mb-6 text-5xl shadow-2xl animate-float">
+    <div className="max-w-3xl mx-auto animate-fadeInUp w-full">
+      <div className="glass rounded-2xl sm:rounded-3xl shadow-2xl p-5 sm:p-8 md:p-12">
+        <div className="text-center mb-8 sm:mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mb-5 sm:mb-6 text-4xl sm:text-5xl shadow-2xl animate-float">
             🍳
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-2 sm:mb-3 tracking-tight px-1">
             What&apos;s cooking?
           </h2>
-          <p className="text-lg text-gray-600 max-w-xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-xl mx-auto leading-relaxed px-1">
             Tell me what&apos;s in your kitchen, and I&apos;ll craft a
             restaurant-quality recipe just for you
           </p>
         </div>
 
         {USE_MOCK_AI && (
-          <div className="mb-8 p-4 bg-amber-50 border-2 border-amber-200 rounded-2xl text-sm text-amber-900">
+          <div className="mb-6 sm:mb-8 p-4 sm:p-5 bg-amber-50 border-2 border-amber-200 rounded-2xl text-sm text-amber-900 leading-relaxed">
             <strong>Mock mode:</strong> recipes are generated locally — no API key and
             no API calls. Set{' '}
             <code className="bg-amber-100 px-1 rounded">VITE_USE_MOCK_AI=false</code>{' '}
@@ -211,7 +211,7 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
         )}
 
         {!USE_MOCK_AI && !API_KEY && (
-          <div className="mb-8 p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-sm text-orange-950">
+          <div className="mb-6 sm:mb-8 p-4 sm:p-5 bg-orange-50 border-2 border-orange-200 rounded-2xl text-sm text-orange-950 leading-relaxed">
             <strong>No API key in this deployment.</strong> The key is baked in when
             the site is built. On GitHub: Settings → Secrets → Actions → repository
             secret{' '}
@@ -224,12 +224,14 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
           </div>
         )}
 
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8 space-y-3">
           <label
             htmlFor="ingredients"
-            className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2"
+            className="block text-sm font-semibold text-gray-700 flex items-center gap-2"
           >
-            <span className="text-lg">🥘</span>
+            <span className="text-lg" aria-hidden>
+              🥘
+            </span>
             Your Ingredients
           </label>
           <textarea
@@ -243,30 +245,34 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
               }
             }}
             placeholder="chicken breast, cherry tomatoes, garlic, fresh basil, mozzarella..."
-            rows={5}
-            className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none bg-white/80 text-lg transition-all"
+            rows={6}
+            className="w-full min-h-[140px] px-4 sm:px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-y bg-white/80 text-base sm:text-lg leading-relaxed transition-all"
             disabled={loading}
           />
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
             💡 Tip: Be specific! &quot;boneless chicken thighs&quot; works
             better than just &quot;chicken&quot;
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl animate-fadeInUp">
-            <p className="text-sm text-red-800 flex items-center gap-2">
-              <span>⚠️</span>
-              {error}
+          <div className="mb-5 sm:mb-6 p-4 sm:p-5 bg-red-50 border-2 border-red-200 rounded-xl animate-fadeInUp">
+            <p className="text-sm text-red-800 flex gap-2.5 leading-relaxed">
+              <span className="shrink-0" aria-hidden>
+                ⚠️
+              </span>
+              <span>{error}</span>
             </p>
           </div>
         )}
 
         {success && (
-          <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl animate-fadeInUp">
-            <p className="text-sm text-green-800 flex items-center gap-2">
-              <span>✓</span>
-              Recipe created! Redirecting to your collection...
+          <div className="mb-5 sm:mb-6 p-4 sm:p-5 bg-green-50 border-2 border-green-200 rounded-xl animate-fadeInUp">
+            <p className="text-sm text-green-800 flex gap-2.5 leading-relaxed">
+              <span className="shrink-0" aria-hidden>
+                ✓
+              </span>
+              <span>Recipe created! Redirecting to your collection...</span>
             </p>
           </div>
         )}
@@ -275,7 +281,7 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
           type="button"
           onClick={generateRecipe}
           disabled={loading || !ingredients.trim()}
-          className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-5 px-8 rounded-2xl text-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+          className="w-full min-h-[52px] bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-4 sm:py-5 px-6 rounded-2xl text-base sm:text-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99] sm:hover:scale-[1.02] sm:active:scale-[0.98]"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-3">
@@ -309,12 +315,12 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
           )}
         </button>
 
-        <div className="mt-8 pt-8 border-t-2 border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-            <span>🌟</span>
+        <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t-2 border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3 sm:mb-4 flex items-center gap-2">
+            <span aria-hidden>🌟</span>
             Try these combinations:
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {[
               'salmon, asparagus, lemon, dill',
               'pasta, sun-dried tomatoes, goat cheese',
@@ -325,7 +331,7 @@ recipeName, servings (number), prepTime, cookTime, ingredients (array of strings
                 key={i}
                 type="button"
                 onClick={() => setIngredients(example)}
-                className="text-left px-4 py-3 bg-white hover:bg-orange-50 border-2 border-gray-200 hover:border-orange-300 rounded-xl text-sm text-gray-700 transition-all"
+                className="text-left min-h-[48px] px-4 py-3.5 bg-white hover:bg-orange-50 border-2 border-gray-200 hover:border-orange-300 rounded-xl text-sm sm:text-base text-gray-700 leading-snug transition-colors"
               >
                 {example}
               </button>

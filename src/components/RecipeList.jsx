@@ -22,18 +22,22 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
 
   if (recipes.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto animate-fadeInUp">
-        <div className="glass rounded-3xl shadow-2xl p-12 text-center">
-          <div className="text-8xl mb-6 animate-float">📖</div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-3">
+      <div className="max-w-2xl mx-auto w-full animate-fadeInUp">
+        <div className="glass rounded-2xl sm:rounded-3xl shadow-2xl p-8 sm:p-12 text-center">
+          <div className="text-6xl sm:text-8xl mb-5 sm:mb-6 animate-float">
+            📖
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 leading-tight">
             Your cookbook is empty
           </h2>
-          <p className="text-gray-600 mb-8 text-lg">
+          <p className="text-gray-600 mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
             Start creating delicious recipes with AI!
           </p>
-          <div className="inline-flex items-center gap-2 text-orange-600 font-semibold">
+          <div className="inline-flex flex-wrap items-center justify-center gap-2 text-orange-600 font-semibold text-sm sm:text-base">
             <span>Click &quot;Create&quot; above to get started</span>
-            <span className="text-2xl">→</span>
+            <span className="text-xl sm:text-2xl" aria-hidden>
+              →
+            </span>
           </div>
         </div>
       </div>
@@ -41,11 +45,13 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-8 animate-fadeInUp">
-        <h2 className="text-4xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-          <span className="text-5xl">📚</span>
-          Your Recipe Collection
+    <div className="max-w-6xl mx-auto w-full space-y-6 sm:space-y-8">
+      <div className="animate-fadeInUp">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 leading-tight">
+          <span className="text-4xl sm:text-5xl shrink-0" aria-hidden>
+            📚
+          </span>
+          <span>Your Recipe Collection</span>
         </h2>
 
         <div className="relative">
@@ -54,10 +60,10 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search recipes by name or ingredients..."
-            className="w-full px-6 py-4 pl-14 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none bg-white/80 text-lg transition-all"
+            className="w-full min-h-[52px] px-4 sm:px-6 py-3.5 pl-12 sm:pl-14 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none bg-white/80 text-base sm:text-lg transition-all"
           />
           <svg
-            className="absolute left-5 top-5 h-6 w-6 text-gray-400"
+            className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-gray-400 pointer-events-none"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -73,13 +79,13 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredRecipes.map((recipe, index) => (
           <div
             key={recipe.id}
             role="button"
             tabIndex={0}
-            className="recipe-card glass rounded-2xl shadow-lg p-6 cursor-pointer group animate-fadeInUp"
+            className="recipe-card glass rounded-2xl shadow-lg p-5 sm:p-6 cursor-pointer group animate-fadeInUp"
             style={{ animationDelay: `${index * 0.1}s` }}
             onClick={() => onViewRecipe(recipe)}
             onKeyDown={(e) => {
@@ -89,12 +95,12 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
               }
             }}
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-orange-600 transition-colors line-clamp-2">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 group-hover:text-orange-600 transition-colors line-clamp-2 leading-snug">
                   {recipe.recipeName || 'Untitled Recipe'}
                 </h3>
-                <div className="flex flex-wrap gap-3 text-sm text-gray-600">
+                <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
                   {recipe.servings && (
                     <span className="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded-lg">
                       <span>👥</span>
@@ -117,7 +123,7 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
                     onDeleteRecipe(recipe.id)
                   }
                 }}
-                className="text-gray-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
+                className="text-gray-400 hover:text-red-600 transition-colors p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-red-50 shrink-0"
                 aria-label="Delete recipe"
               >
                 <svg
@@ -137,19 +143,19 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
             </div>
 
             {recipe.originalIngredients && (
-              <div className="mb-4 p-3 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-200/50">
-                <p className="text-sm text-gray-700 line-clamp-2">
+              <div className="mb-4 p-3 sm:p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-200/50">
+                <p className="text-sm text-gray-700 line-clamp-2 leading-relaxed">
                   <span className="font-semibold">Ingredients: </span>
                   {recipe.originalIngredients}
                 </p>
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-4 border-t-2 border-gray-100">
-              <span className="text-xs text-gray-500">
+            <div className="flex items-center justify-between gap-3 pt-4 border-t-2 border-gray-100">
+              <span className="text-xs text-gray-500 shrink-0">
                 {formatDate(recipe.createdAt)}
               </span>
-              <span className="text-orange-600 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+              <span className="text-orange-600 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all shrink-0">
                 View Recipe
                 <svg
                   className="w-4 h-4"
@@ -171,27 +177,35 @@ export function RecipeList({ recipes, onViewRecipe, onDeleteRecipe }) {
       </div>
 
       {filteredRecipes.length === 0 && searchTerm && (
-        <div className="glass rounded-3xl shadow-lg p-12 text-center animate-fadeInUp">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">
+        <div className="glass rounded-2xl sm:rounded-3xl shadow-lg p-8 sm:p-12 text-center animate-fadeInUp">
+          <div className="text-5xl sm:text-6xl mb-4" aria-hidden>
+            🔍
+          </div>
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
             No recipes found
           </h3>
-          <p className="text-gray-600">Try a different search term</p>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Try a different search term
+          </p>
         </div>
       )}
 
-      <div className="mt-8 glass rounded-2xl shadow-lg p-6 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-200/50 animate-fadeInUp">
-        <div className="flex items-center justify-between">
+      <div className="mt-6 sm:mt-8 glass rounded-2xl shadow-lg p-5 sm:p-6 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-200/50 animate-fadeInUp">
+        <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm text-gray-600 font-semibold">
               Your Collection
             </p>
-            <p className="text-4xl font-bold text-gray-800">{recipes.length}</p>
+            <p className="text-3xl sm:text-4xl font-bold text-gray-800 mt-1">
+              {recipes.length}
+            </p>
             <p className="text-sm text-gray-600">
               {recipes.length === 1 ? 'recipe' : 'recipes'} saved
             </p>
           </div>
-          <div className="text-6xl animate-float">🎉</div>
+          <div className="text-5xl sm:text-6xl animate-float shrink-0" aria-hidden>
+            🎉
+          </div>
         </div>
       </div>
     </div>
