@@ -1,6 +1,6 @@
 # Build Vite app and deploy dist/ to GitHub Pages.
 # Requires: Settings → Pages → Source = GitHub Actions
-# Secret: VITE_AI_API_KEY (repository secret)
+# Secrets (optional): VITE_OPENAI_API_KEY and/or VITE_AI_API_KEY — same value is fine
 
 name: Deploy to GitHub Pages
 
@@ -34,6 +34,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
           VITE_AI_API_KEY: ${{ secrets.VITE_AI_API_KEY }}
 
       - uses: actions/upload-pages-artifact@v3

@@ -4,12 +4,15 @@ import { useState } from 'react'
 const USE_MOCK_AI = import.meta.env.VITE_USE_MOCK_AI === 'true'
 
 /**
- * Key from build-time env only (no UI). Vite inlines VITE_* into the bundle —
- * fine for a private household app on GitHub Pages; use low limits on the key.
+ * OpenAI API key from build-time env (no UI). Vite inlines VITE_* into the bundle.
+ * Prefer VITE_OPENAI_API_KEY; VITE_AI_API_KEY still works for older setups.
  */
-const ENV_AI_KEY = (import.meta.env.VITE_AI_API_KEY || '').trim()
-const ENV_LEGACY_KEY = (import.meta.env.VITE_ANTHROPIC_API_KEY || '').trim()
-const API_KEY = ENV_AI_KEY || ENV_LEGACY_KEY
+const ENV_OPENAI_KEY = (import.meta.env.VITE_OPENAI_API_KEY || '').trim()
+const ENV_GENERIC_KEY = (import.meta.env.VITE_AI_API_KEY || '').trim()
+const API_KEY = ENV_OPENAI_KEY || ENV_GENERIC_KEY
+
+const OPENAI_MODEL =
+  (import.meta.env.VITE_OPENAI_MODEL || 'gpt-4o-mini').trim() || 'gpt-4o-mini'
 
 function buildMockRecipe(ingredients) {
   const parts = ingredients
@@ -77,7 +80,7 @@ export function RecipeGenerator({ onRecipeGenerated, onViewRecipes }) {
 
     if (!API_KEY) {
       setError(
-        'Missing API key: set VITE_AI_API_KEY in .env, then rebuild (or set VITE_USE_MOCK_AI=true for offline mock recipes).',
+        'No API key in this build. Add VITE_OPENAI_API_KEY (or VITE_AI_API_KEY) to .env and run npm run build. On GitHub Pages: add that name as a repository secret, then re-run “Deploy to GitHub Pages”. Or set VITE_USE_MOCK_AI=true for offline mock recipes.',
       )
       return
     }
@@ -86,36 +89,35 @@ export function RecipeGenerator({ onRecipeGenerated, onViewRecipes }) {
     setError('')
     setSuccess(false)
 
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [
-            {
-              role: 'user',
-              content: `Create a romantic, date-night quality recipe using these ingredients: ${ingredients}.
+    const userPrompt = `Create a romantic, date-night quality recipe using these ingredients: ${ingredients}.
 
-Respond ONLY with a JSON object (no markdown, no explanations) in this exact format:
-{
-  "recipeName": "creative romantic name",
-  "servings": 2,
-  "prepTime": "X minutes",
-  "cookTime": "X minutes",
-  "ingredients": ["ingredient 1 with amount", "ingredient 2 with amount"],
-  "instructions": ["step 1", "step 2"],
-  "tips": ["tip 1", "tip 2"]
-}`,
-            },
-          ],
-        }),
-      })
+Return ONLY a JSON object (no markdown, no extra text) with these keys:
+recipeName, servings (number), prepTime, cookTime, ingredients (array of strings), instructions (array of strings), tips (array of strings).`
+
+    try {
+      const response = await fetch(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: OPENAI_MODEL,
+            max_tokens: 1500,
+            response_format: { type: 'json_object' },
+            messages: [
+              {
+                role: 'system',
+                content:
+                  'You are an expert chef. Reply with valid JSON only, matching the user schema.',
+              },
+              { role: 'user', content: userPrompt },
+            ],
+          }),
+        },
+      )
 
       const rawBody = await response.text()
       let data
@@ -133,7 +135,7 @@ Respond ONLY with a JSON object (no markdown, no explanations) in this exact for
         throw new Error(msg)
       }
 
-      const content = data.content?.[0]?.text
+      const content = data.choices?.[0]?.message?.content
       if (!content) {
         throw new Error('No recipe text in API response')
       }
@@ -208,6 +210,20 @@ Respond ONLY with a JSON object (no markdown, no explanations) in this exact for
           </div>
         )}
 
+        {!USE_MOCK_AI && !API_KEY && (
+          <div className="mb-8 p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-sm text-orange-950">
+            <strong>No API key in this deployment.</strong> The key is baked in when
+            the site is built. On GitHub: Settings → Secrets → Actions → repository
+            secret{' '}
+            <code className="bg-white/80 px-1 rounded">VITE_OPENAI_API_KEY</code>{' '}
+            or{' '}
+            <code className="bg-white/80 px-1 rounded">VITE_AI_API_KEY</code>,
+            then Actions → re-run the latest &quot;Deploy to GitHub Pages&quot;
+            workflow. Locally: use a <code className="bg-white/80 px-1 rounded">.env</code>{' '}
+            file and <code className="bg-white/80 px-1 rounded">npm run build</code>.
+          </div>
+        )}
+
         <div className="mb-8">
           <label
             htmlFor="ingredients"
@@ -258,9 +274,7 @@ Respond ONLY with a JSON object (no markdown, no explanations) in this exact for
         <button
           type="button"
           onClick={generateRecipe}
-          disabled={
-            loading || !ingredients.trim() || (!USE_MOCK_AI && !API_KEY)
-          }
+          disabled={loading || !ingredients.trim()}
           className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-5 px-8 rounded-2xl text-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-[1.02] active:scale-[0.98]"
         >
           {loading ? (
